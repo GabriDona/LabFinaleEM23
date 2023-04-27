@@ -5,6 +5,37 @@
 #include "TH3F.h"
 #include <cmath>
 
+double myF2(double *x, double *par)
+{
+    double V = 4.35;
+    double xx = x[0];
+    double val = 4.35287 / TMath::Sqrt(1 + 1 / TMath::Power((2 * TMath::Pi() * xx * par[0]), 2)); //(1 / ((2 * TMath::Pi() * xx * par[0]) * (2 * TMath::Pi() * xx * par[0])))
+    return val;
+}
+
+double myF3(double *x, double *par)
+{
+    double V = 4.35;
+    double xx = x[0];
+    double val = (345.7 * V) / sqrt(((383.46) * (383.46)) + (2 * TMath::Pi() * xx * par[0]) * (2 * TMath::Pi() * xx * par[0]));
+    return val;
+}
+
+double myF4(double *x, double *par) // fase twee
+{
+    double V = 4.3;
+    double xx = x[0];
+    double val = TMath::ATan(1 / (2 * TMath::Pi() * xx * par[0] * 391.73));
+    return val;
+}
+
+double myF5(double *x, double *par) // fase woo
+{
+    double V = 4.3;
+    double xx = x[0];
+    double val = TMath::ATan(((2 * TMath::Pi() * xx * par[0]) / 383.46));
+    return val;
+}
 
 void voltTime() // restituisce il grafico Ampiezza-Tempo
 {               // Amplitude (v) - Time (s)
@@ -27,48 +58,102 @@ void voltTime() // restituisce il grafico Ampiezza-Tempo
     freqSub1->Draw("CP");
 }
 
-void freqVolt() {
+void freqVolt()
+{
+    TCanvas *myCanvas2 = new TCanvas();
     TGraph *freqvolt = new TGraph("freqvolt.txt", "%lg %lg");
     TGraph *freqvoltTwi = new TGraph("freqvoltTwi.txt", "%lg %lg");
     TGraph *freqvoltSub = new TGraph("freqvoltSub.txt", "%lg %lg");
 
-    TCanvas *myCanvas1 = new TCanvas("myCanvas1", "Frequency/Amplitude graph");
-
-    TF1 *f1 = new TF1("f1", "[0]", 0, 100);
+    TF1 *f1 = new TF1("f1", "[0]", 1000, 9000);
     freqvolt->Fit(f1);
     double_t V = f1->GetParameter(0);
-    TF1 *f2 = new TF1("f2", "(344.6*V)/radq((391.73)^2 + (2*Pi*x*[2])^(-2))", 0, 100000); // fit con i dati sperimentali
-    TF1 *f3 = new TF1("f3", "(345.7*V)/radq((383.46)^2 + (2*Pi*x*[3])^2)", 0, 100000);
+    TF1 *f2 = new TF1("f2", "4.35287/TMath::Sqrt(1+1/TMath::Power((2*TMath::Pi()*x*[0]),2))", 1000, 9000); // fit con i dati sperimentali
+    TF1 *f3 = new TF1("f3", "4.35287 / TMath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*[0]),2))", 1000, 9000);
 
     f1->SetLineColor(kGreen);
     f2->SetLineColor(kRed);
     f3->SetLineColor(kBlue);
-    
+
+    freqvoltTwi->SetMinimum(0);
+    freqvoltTwi->SetMaximum(5);
+
+    f2->SetParameter(0, 0.00001985);
     freqvoltTwi->Fit(f2);
+    freqvoltTwi->Draw();
+
+    f3->SetParameter(0, 0.00005358);
     freqvoltSub->Fit(f3);
-    freqvolt->Draw("APE");
-    freqvoltTwi->Draw("CD");
-    freqvoltSub->Draw("CD"); // l'ho fatto solo per uno perchè non sono sicuro della forma, se va bene basta fare copia incolla
+    freqvoltSub->Draw("SAME");
 
+    freqvolt->Draw("SAME");
 }
 
-void freqVolt2() {
-    TGraph *freqvolt2 = new TGraph("freqvolt2.txt", "%lg %lg");
-    TGraph *freqvoltTwi2 = new TGraph("freqvoltTwi2.txt", "%lg %lg");
-    TGraph *freqvoltSub2 = new TGraph("freqvoltSub2.txt", "%lg %lg");
-
+void freqVolt2()
+{
     TCanvas *myCanvas1 = new TCanvas("myCanvas1", "Frequency/Amplitude graph restricted");
+    TGraph *freqvolt = new TGraph("freqvolt.txt", "%lg %lg");
+    TGraph *freqvoltTwi = new TGraph("freqvoltTwi.txt", "%lg %lg");
+    TGraph *freqvoltSub = new TGraph("freqvoltSub.txt", "%lg %lg");
+
+    TF1 *f1 = new TF1("f1", "[0]", 1000, 9000);
+    freqvolt->Fit(f1);
+    double_t V = f1->GetParameter(0);
+    TF1 *f2 = new TF1("f2", "4.35287/TMath::Sqrt(1+1/TMath::Power((2*TMath::Pi()*x*[0]),2))", 1000, 9000); // fit con i dati sperimentali
+    TF1 *f3 = new TF1("f3", "4.35287 / TMath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*[0]),2))", 1000, 9000);
+
+    f1->SetLineColor(kGreen);
+    f2->SetLineColor(kRed);
+    f3->SetLineColor(kBlue);
+
+    freqvoltTwi->SetMinimum(0);
+    freqvoltTwi->SetMaximum(5);
+
+    f2->SetParameter(0, 0.00001985);
+    freqvoltTwi->Fit(f2);
+    freqvoltTwi->Draw();
+
+    f3->SetParameter(0, 0.00005358);
+    freqvoltSub->Fit(f3);
+    freqvoltSub->Draw("SAME");
+
+    freqvolt->Draw("SAME");
 }
 
-void freqPhase() {
+void freqPhase()
+{
     TGraph *freqpha = new TGraph("freqpha.txt", "%lg %lg");
     TGraph *freqphaTwi = new TGraph("freqphaTwi.txt", "%lg %lg");
     TGraph *freqphaSub = new TGraph("freqphaSub.txt", "%lg %lg");
 
     TCanvas *myCanvas1 = new TCanvas("myCanvas1", "Frequency/Phase graph");
+
+    TF1 *f1 = new TF1("f1", "[0]", 1000, 9000);
+    TF1 *f2 = new TF1("f2", "TMath::ATan(1/(2 * TMath::Pi() * x * [0]))", 1000, 9000); // fit con i dati sperimentali
+    TF1 *f3 = new TF1("f3", "TMath::ATan(-2 * TMath::Pi() * x * [0])", 1000, 9000);
+
+    f1->SetLineColor(kGreen);
+    f2->SetLineColor(kRed);
+    f3->SetLineColor(kBlue);
+
+    freqphaTwi->SetMinimum(-100);
+    freqphaTwi->SetMaximum(100);
+
+    f2->SetParameter(0, 0.00001985);
+    freqphaTwi->Fit(f2);
+    freqphaTwi->Draw();
+
+    f3->SetParameter(0, 0.00005358);
+    freqphaSub->Fit(f3);
+    freqphaSub->Draw("SAME");
+
+    f1->SetParameter(0, 0);
+    freqpha->Fit(f1);
+    freqpha->Draw("SAME");
 }
 
-void freqPhase2() {
+void freqPhase2()
+{
     TGraph *freqpha2 = new TGraph("freqpha2.txt", "%lg %lg");
     TGraph *freqphaTwi2 = new TGraph("freqphaTwi2.txt", "%lg %lg");
     TGraph *freqphaSub2 = new TGraph("freqphaSub2.txt", "%lg %lg");
