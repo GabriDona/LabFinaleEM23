@@ -150,6 +150,33 @@ void freqPhase()
     f1->SetParameter(0, 0);
     freqpha->Fit(f1);
     freqpha->Draw("SAME");
+
+
+    TGraph *freq1 = new TGraph("freq1.txt", "%lg %lg"); // Dati relativi al canale 1
+    TGraph *freq2 = new TGraph("freq2.txt", "%lg %lg"); // Dati relativi al canale 2
+    TGraph *freq3 = new TGraph("freq3.txt", "%lg %lg"); // Dati relativi al canale 3
+
+    freq1->SetTitle("Systematic Error; Frequency (Hz); Phase(rad)");
+    TF1 *f4 = new TF1("f4", "[0]+x*[1]", 0, 100); 
+    TF1 *f5 = new TF1("f5", "[2]+x*[3]", 0, 100);
+    TF1 *f6 = new TF1("f6", "[4]+x*[5]", 0, 100);
+    f1->SetParameter(0, 0);
+    f2->SetParameter(0, 0);
+    f3->SetParameter(0, 0);
+    f1->SetParameter(1, 0);
+    f2->SetParameter(1, 0);
+    f3->SetParameter(1, 0);
+
+    freq1->Fit(f4);
+    freq2->Fit(f5);
+    freq3->Fit(f6);
+
+    TF1 *ft1 = new TF1("ft1", "f1-f4", 0, 100); 
+    TF1 *ft2 = new TF1("ft2", "f2-f5", 0, 100); 
+    TF1 *ft3 = new TF1("ft3", "f3-f6", 0, 100); 
+
+    //da qui in poi non so come ndare avanti perchè non mi ricordo quella dei fotoni, guarda cosa riesci a fare. 
+
 }
 
 void freqPhase2()
