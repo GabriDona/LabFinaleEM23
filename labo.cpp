@@ -159,8 +159,8 @@ void freqPhase()
     TCanvas *myCanvas1 = new TCanvas("myCanvas1", "Frequency/Phase graph");
 
     TF1 *f1 = new TF1("f1", "[0] + [1] * x ", 1000, 9000);
-    TF1 *f2 = new TF1("f2", "[1] + [2] * x + TMath::ATan(1/(2 * TMath::Pi() * x * [0]))", 1050, 8900); // fit con i dati sperimentali
-    TF1 *f3 = new TF1("f3", "[1] + [2] * x + TMath::ATan(-2 * TMath::Pi() * x * [0])", 1050, 8900);
+    TF1 *f2 = new TF1("f2", "[1] + [2] * x + (180/TMath::Pi())*TMath::ATan(1/(2 * TMath::Pi() * x * [0]))", 1050, 8900); // fit con i dati sperimentali
+    TF1 *f3 = new TF1("f3", "[1] + [2] * x + (180/TMath::Pi())*TMath::ATan(-2 * TMath::Pi() * x * [0])", 1050, 8900);
 
     f1->SetParameter(0, par[0]); // la funzione dovrebbe essere la stessa quindi diamo i parametri di prima
     f1->SetParameter(1, par[1]);
@@ -171,9 +171,9 @@ void freqPhase()
     f3->SetParameter(1, par[4]);
     f3->SetParameter(3, par[5]);
 
-    freqpha->Fit(f1);
-    freqphaTwi->Fit(f2);
-    freqphaSub->Fit(f3);
+    freqpha->Fit(f1, "N");
+    freqphaTwi->Fit(f2, "N");
+    freqphaSub->Fit(f3, "N");
 
     Double_t para[8];
 
@@ -181,20 +181,20 @@ void freqPhase()
     f2->GetParameters(&para[2]);
     f3->GetParameters(&para[5]);
 
-    freqpha->Draw();
-    freqphaTwi->Draw("SAME");
-    freqphaSub->Draw("SAME");
+    // freqpha->Draw();
+    // freqphaTwi->Draw();
+    // freqphaSub->Draw("SAME");
 
-    for (int i = 0; i < 3; ++i)
+    /*for (int i = 0; i < 8; ++i)
     {
-        std::cout << f3->GetParameter(i) << '\n';
-    }
+        std::cout << para[i] << '\n';
+    }*/
 
-    /*TF1 *ft1 = new TF1("ft1", "f1-f4", 0, 10000);
+    TF1 *ft1 = new TF1("ft1", "f1-f4", 0, 10000);
     TF1 *ft2 = new TF1("ft2", "f2-f5", 0, 10000);
     TF1 *ft3 = new TF1("ft3", "f3-f6", 0, 10000);
 
-    ft1->SetParameter(0, para[0]); //nella sottrzione alcuni parametri saranno uguali a prima, altri adattati al fit
+    ft1->SetParameter(0, para[0]); // nella sottrzione alcuni parametri saranno uguali a prima, altri adattati al fit
     ft1->SetParameter(1, para[1]);
     ft1->SetParameter(2, par[0]);
     ft1->SetParameter(3, par[1]);
@@ -209,60 +209,12 @@ void freqPhase()
     ft3->SetParameter(3, par[4]);
     ft3->SetParameter(4, par[5]);
 
-    ft1->Draw();
-    ft2->Draw();
+    ft3->SetMinimum(-100);
+    ft3->SetMaximum(100);
+
     ft3->Draw();
-
-        TF1 *f1 = new TF1("f1", "[0]", 1000, 9000);
-    TF1 *f2 = new TF1("f2", "TMath::ATan(1/(2 * TMath::Pi() * x * [0]))", 1050, 8900); // fit con i dati sperimentali
-    TF1 *f3 = new TF1("f3", "TMath::ATan(-2 * TMath::Pi() * x * [0])", 1050, 8900);
-
-    f1->SetLineColor(kGreen);
-    f2->SetLineColor(kRed);
-    f3->SetLineColor(kBlue);
-
-    freqphaSub->SetMinimum(-100);
-    freqphaSub->SetMaximum(100);
-
-    f2->SetParameter(0, 0.00001985);
-    freqphaTwi->Fit(f2);
-    freqphaTwi->Draw();
-
-    f3->SetParameter(0, 0.00005358);
-    freqphaSub->Fit(f3);
-    freqphaSub->Draw();
-
-    *f1->SetParameter(0, 0);
-    freqpha->Fit(f1);
-    freqpha->Draw();
-
-
-    TGraph *freq1 = new TGraph("freq1.txt", "%lg %lg"); // Dati relativi al canale 1
-    TGraph *freq2 = new TGraph("freq2.txt", "%lg %lg"); // Dati relativi al canale 2
-    TGraph *freq3 = new TGraph("freq3.txt", "%lg %lg"); // Dati relativi al canale 3
-
-    freq1->SetTitle("Systematic Error; Frequency (Hz); Phase(rad)");
-    TF1 *f4 = new TF1("f4", "[0]+x*[1]", 0, 100);
-    TF1 *f5 = new TF1("f5", "[2]+x*[3]", 0, 100);
-    TF1 *f6 = new TF1("f6", "[4]+x*[5]", 0, 100);
-    f1->SetParameter(0, 0);
-    f2->SetParameter(0, 0);
-    f3->SetParameter(0, 0);
-    f1->SetParameter(1, 0);
-    f2->SetParameter(1, 0);
-    f3->SetParameter(1, 0);
-
-    freq1->Fit(f4);
-    freq2->Fit(f5);
-    freq3->Fit(f6);
-
-
-
-    TF1 *ft1 = new TF1("ft1", "f1-f4", 0, 100);
-    TF1 *ft2 = new TF1("ft2", "f2-f5", 0, 100);
-    TF1 *ft3 = new TF1("ft3", "f3-f6", 0, 100); */
-
-    // da qui in poi non so come andare avanti perchè non mi ricordo quella dei fotoni, guarda cosa riesci a fare.
+    ft2->Draw("SAME");
+    ft1->Draw("SAME");
 }
 
 void freqPhase2()
