@@ -6,8 +6,8 @@
 #include <cmath>
 
 // Utilizzare al CANALE 1 il GENERATORE, al CANALE 2 il TWEETER e al CANALE 3 il WOOFER
-// QUELLE COMMENTATE SONO LE FORMULE E I DATI NOSTRI, CONTROLLARE LA REISTENZA DI L
-//Inserire come V sempre quello immesso
+// QUELLE COMMENTATE SONO LE FORMULE E I DATI NOSTRI, CONTROLLARE LA RESISTENZA DI L
+// Inserire come V sempre quello immesso
 
 void voltTime()                                              // restituisce il grafico Ampiezza-Tempo
 {                                                            // Amplitude (v) - Time (s)
@@ -43,7 +43,7 @@ void freqVolt()
     TF1 *f3 = new TF1("f3", "4.35287/TMath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*[0]),2))", 1000, 9000);
     // V*0.9016/Tmath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*[0]),2))
 
-    TF1 *fatt1 = new TF1("fatt1", "4.3528", 1000, 9000); 
+    TF1 *fatt1 = new TF1("fatt1", "4.3528", 1000, 9000);
     TF1 *fatt2 = new TF1("fatt2", "4.3528/TMath::Sqrt(1+1/TMath::Power((2*TMath::Pi()*x*0.00001985),2))", 1000, 9000);
     // V*0.8796/TMath::Sqrt(1+1/TMath::Power((2*TMath::Pi()*x*0.00002593),2))
     TF1 *fatt3 = new TF1("fatt3", "4.3528/TMath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*0.00005358),2))", 1000, 9000);
@@ -67,13 +67,24 @@ void freqVolt()
     f2->SetParameter(0, 0.00001985); // 2.593E-5
     f3->SetParameter(0, 0.00005358); // 2.652E-5
 
-    freqvolt->Fit(f1);
-    freqvoltTwi->Fit(f2);
-    freqvoltSub->Fit(f3);
+    freqvolt->Fit(f1, "N");
+    freqvoltTwi->Fit(f2, "N");
+    freqvoltSub->Fit(f3, "N");
 
     f1->Draw("SAME"); // Queste sarebbero da disegnare con la barra di errore
     f2->Draw("SAME");
     f3->Draw("SAME");
+
+    double f = 1 / (2 * TMath::Pi() * TMath::Sqrt(f2->GetParameter(0) * f3->GetParameter(0)));
+    std::cout << "La frequenza di crossover é " << f << "Hz" << '\n';
+
+    TF1 *fs1 = new TF1("fs1", "f2-f3", 1000, 9000);
+    Double_t a = f2->GetParameter(0);
+    Double_t b = f3->GetParameter(0);
+    fs1->SetParameter(0, a);
+    fs1->SetParameter(1, b);
+
+    std::cout << "La frequenza di crossover é " << fs1->GetX(0, 4000, 5000) << "Hz" << '\n';
 }
 
 void freqVolt2()
@@ -190,7 +201,7 @@ void freqPhase()
     fatt1->SetLineColor(kBlack); // I colori poi li mettiamo a posto
     fatt2->SetLineColor(kYellow);
     fatt3->SetLineColor(kOrange);
-        
+
     ft1->SetLineColor(kGreen);
     ft2->SetLineColor(kRed);
     ft3->SetLineColor(kBlue);
@@ -219,6 +230,19 @@ void freqPhase()
     ft1->Draw("SAME");
     ft2->Draw("SAME");
     ft3->Draw("SAME");
+
+    std::cout << "Tc =" << ft2->GetParameter(0) << '\n'; //QUESTI NON VENGONO
+    std::cout << "Tl =" << ft3->GetParameter(0) << '\n'; //SONO DA RICONTROLLARE CON I DATI GIUSTI
+    double f = 1 / (2 * TMath::Pi() * TMath::Sqrt(ft2->GetParameter(0) * ft3->GetParameter(0)));
+    std::cout << "La frequenza di crossover é " << f << "Hz" << '\n';
+
+    TF1 *fs1 = new TF1("fs1", "ft2+ft3", 1000, 9000);
+    for( int i=0; i<5; ++i) {
+        fs1->SetParameter(i, ft2->GetParameter(i));
+        fs1->SetParameter(i+5, ft3->GetParameter(i));
+    }
+    fs1->Draw("SAME");
+    std::cout << "La frequenza di crossover é " << fs1->GetX(0, 5000, 6500) << "Hz" << '\n';
 }
 
 void freqPhase2()
