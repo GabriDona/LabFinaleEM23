@@ -37,25 +37,100 @@ double myF5(double *x, double *par) // fase woo
     return val;
 }
 
-void voltTime() // restituisce il grafico Ampiezza-Tempo
-{               // Amplitude (v) - Time (s)
+void voltTime15() // restituisce il grafico Ampiezza-Tempo
+{                 // Amplitude (v) - Time (s)
 
     TGraph *freqGen1 = new TGraph("freqGen.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo generata
     TGraph *freqTwi1 = new TGraph("freqTwi.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo twiter
     TGraph *freqSub1 = new TGraph("freqSub.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo woofer
+    TMultiGraph *mg = new TMultiGraph;
+    mg->SetTitle("15 KHz - Behavior; Time(s); Amplitude(V)");
 
     TCanvas *myCanvas1 = new TCanvas("myCanvas1", "n1 Heartz Behavior"); // sovrapponi 3 grafici
-    freqGen1->SetTitle("n1 Heartz Behavior; Time(s); Amplitude(V)");
+
     freqGen1->SetLineColor(40);
-    freqGen1->SetLineWidth(3);
-    freqGen1->Draw();
+    freqGen1->SetMarkerColor(40);
 
     freqTwi1->SetLineColor(46);
-    freqTwi1->SetLineWidth(3);
-    freqTwi1->Draw("CP");
+    freqTwi1->SetMarkerColor(46);
+
     freqSub1->SetLineColor(38);
-    freqSub1->SetLineWidth(3);
-    freqSub1->Draw("CP");
+    freqSub1->SetMarkerColor(38);
+    mg->Add(freqTwi1);
+    mg->Add(freqSub1);
+    mg->Add(freqGen1);
+
+    mg->Draw("apl");
+
+    auto legend = new TLegend(0.1, 0.7, 0.48, 0.9);
+    legend->AddEntry(freqGen1, "Vi", "l");
+    legend->AddEntry(freqTwi1, "Twitter", "l");
+    legend->AddEntry(freqSub1, "Woofer", "l");
+    legend->Draw();
+    myCanvas1->Print("Prel15KHz.pdf");
+}
+void voltTime6() // restituisce il grafico Ampiezza-Tempo
+{                // Amplitude (v) - Time (s)
+
+    TGraph *freqGen1 = new TGraph("freqGen1.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo generata
+    TGraph *freqTwi1 = new TGraph("freqTwi1.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo twiter
+    TGraph *freqSub1 = new TGraph("freqSub1.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo woofer
+    TMultiGraph *mg = new TMultiGraph;
+
+    mg->SetTitle("6.1 KHz - Behavior; Time(s); Amplitude(V)");
+
+    TCanvas *myCanvas2 = new TCanvas("myCanvas2", "6.1 KHeartz Behavior"); // sovrapponi 3 grafici
+
+    freqGen1->SetLineColor(40);
+    freqGen1->SetMarkerColor(40);
+
+    freqTwi1->SetLineColor(46);
+    freqTwi1->SetMarkerColor(46);
+
+    freqSub1->SetLineColor(38);
+    freqSub1->SetMarkerColor(38);
+    mg->Add(freqTwi1);
+    mg->Add(freqSub1);
+    mg->Add(freqGen1);
+
+    mg->Draw("apl");
+    auto legend = new TLegend(0.1, 0.7, 0.48, 0.9);
+    legend->AddEntry(freqGen1, "Vi", "l");
+    legend->AddEntry(freqTwi1, "Twitter", "l");
+    legend->AddEntry(freqSub1, "Woofer", "l");
+    legend->Draw();
+    myCanvas2->Print("Prel6KHz.pdf");
+}
+void voltTime300() // restituisce il grafico Ampiezza-Tempo
+{                  // Amplitude (v) - Time (s)
+
+    TGraph *freqGen1 = new TGraph("freqGen2.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo generata
+    TGraph *freqTwi1 = new TGraph("freqTwi2.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo twiter
+    TGraph *freqSub1 = new TGraph("freqSub2.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo woofer
+    TMultiGraph *mg = new TMultiGraph;
+    mg->SetTitle("300 Hz - Behavior; Time(s); Amplitude(V)");
+
+    TCanvas *myCanvas3 = new TCanvas("myCanvas3", "300 Heartz Behavior"); // sovrapponi 3 grafici
+
+    freqGen1->SetLineColor(40);
+    freqGen1->SetMarkerColor(40);
+
+    freqTwi1->SetLineColor(46);
+    freqTwi1->SetMarkerColor(46);
+
+    freqSub1->SetLineColor(38);
+    freqSub1->SetMarkerColor(38);
+    mg->Add(freqTwi1);
+    mg->Add(freqSub1);
+    mg->Add(freqGen1);
+
+    mg->Draw("apl");
+    auto legend = new TLegend(0.1, 0.7, 0.48, 0.9);
+    legend->AddEntry(freqGen1, "Vi", "l");
+    legend->AddEntry(freqTwi1, "Twitter", "l");
+    legend->AddEntry(freqSub1, "Woofer", "l");
+    legend->Draw();
+    myCanvas3->Print("Prel300Hz.pdf");
 }
 
 void freqVolt()
