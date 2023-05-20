@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[siunitx]{circuitikz}
+
+\usepackage{subcaption}
+\usepackage[export]{adjustbox}
+\usepackage{wrapfig}
+
+\usepackage{geometry}
+\usepackage{amsmath}
+\geometry{a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm}
+
+
+
+\title{\textbf{Studio del comportamento di un circuito crossover}}
+\author{Donati Gabriele, Miroglio Virginio}
+\date{10 Maggio 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+Lo scopo dell'esperimento consiste nell'osservazione e nella descrizione del comportamento dinamico di un circuito Crossover quando sottoposto a tensione sinusoidale. % Il circuito crossover è un componente elettronico molto importante negli impianti audio, in quanto consente di dividere il segnale in due band, una per i bassi e una per gli alti, in modo da poterle indirizzare alle relative casse acustiche.%
+ Mediante la raccolta di dati relativi alle tensioni di ingresso e sui rami, è stato possibile confrontare l'effettivo funzionamento del circuito con l'andamento previsto.
+È stato quindi studiato qualitativamente e quantitativamente la risposta in ampiezza e la risposta in fase del circuito, estrapolando mediante due procedimenti indipendenti le migliori stime della frequenza di crossover del sistema e confrontandole con il valore atteso. 
+I valori ottenuti più significativi sono ....
+
+\section{Introdzione}
+Il circuito Crossover (figura 1) è un notevole esempio di circuito RLC che consente la separazione di un segnale sinusoidale di ingresso in due canali a seconda della frequenza emessa dal generatore .Si compone di due rami connessi in parallelo; un ramo Tweeter, costituito complessivamente da una resistenza e un condensatore, che agisce come un filtro passa-alto, e un ramo Woofer, che opera da filtro passa-basso, formato da una resistenza e da un induttore. %le specifiche sono da sistemare%
+Come mostrato nell'appendice, (vedi formula xyz) è evidente che a basse frequenze ($\nu << \nu_c$) il modulo dell'impedenza del ramo Tweeter ($Z_t$) è notevolmente superiore a quella del Woofer ($Z_w$), causando un maggiore flusso di potenza attraverso il ramo induttivo del circuito.
+Viceversa, all'aumentare della frequenza, si verifica una diminuizione di $Z_t$ e un aumento di $Z_w$ , garantendo la progressiva trasmissione di potenza al ramo capacitivo.
+Si può dimostrare (Paragrafo 6) che esiste un particolare valore della frequenza ($\nu_c$) per cui i moduli delle tensioni ai capi delle resistenze r1 e r2 %ovviamente da sistemare%
+coincidono. Tale frequenza dipende solo dalle specifiche del sistema e vale:
+
+$$\nu_c = \frac{1}{2\pi \sqrt{LC}} = \frac{1}{2\pi \sqrt{\tau_t \tau_w}}$$  
+%va numerata la formula%
+Dove L rappresenta il valore dell'induttanza, C è la capacità del condensatore e $\tau_t$ e $\tau_w$ rappresentano i tempi caratteristici rispettivamente del ramo Twitter e del ramo Woofer.
+È poi possibile ottenere il valore della frequenza di crossover misurando lo sfasamento del segnale nei due rami rispetto a quello generato. Alle basse frequenze, infatti avremo uno sfasamento di 90° sul Tweeter e di 0° sul Woofer, valori che diminuiscono all'amentare della frequenza fino ad arrivare a 0 e -90°. Quando siamo in presenza di ($\nu_c$), gli sfasamenti saranno dunque auguali ed apposti a 45° gradi per il tweeter e 90° per il Woofer. Si ottiene perciò una stima indipendente della frequenza di Crossover estrapolando sperimentalmente il valore della frequenza in cui gli argomenti di (xyz) e di (abc) si equivalgono. (questa parte è da precisare).
+
+\section{Apparato sperimentale e svolgimento}
+\begin{figure}
+    \centering
+
+
+\begin{circuitikz} \draw
+
+(0,0) -- (0,2)
+(0,2) to[sV, l=$V_s$] 
+(0,5) to[R, l=$R_i$](0,6)
+(0,6) -- (0,8)
+(0,8) -- (8,8)
+(4,8) to[R, l=$R_5$] 
+(4,6) to[C, l=$C$] 
+(4,4) to[R, l=$R_3$] 
+(4,2) to[R, l=$R_1$] (4,0)
+(8,8) --
+(8,8) to[R, l=$R_6$] 
+(8,6) to[L, l=$L$] 
+(8,4) to[R, l=$R_4$]
+(8,2) to[R, l=$R_2$]
+(8,0) -- (0,0)
+;
+\end{circuitikz}
+
+
+\caption{Schema del Circuito filtro Crossover}
+\end{figure}
+%L Woofer
+%ricorda di mettere le ddp
+
+
+L'apparato sperimentale (figura 1) consiste in un circuito RLC realizzato sulla breadboard del dispositivo di acquisizione dati NI ELVIS II.
+Esso si compone di 2 rami connessi in parallelo ad un generatore di tensione  $V_s$ di resistenza interna $R_i= 50 \Omega$:
+\begin{itemize}
+\item Il ramo Twitter, in cui sono collegati in serie una resistenza $R_5$ (47,175 $\pm$ 0.031 $\Omega$), un condensatore C (66.2 $\pm$ 0.7 nF) e altre due resistenze $R_3$ (15.305 $\pm$ 0.017$\Omega$) e $R_1$ (330.45 $\pm$ 0.25$\Omega$). Ai capi di queste utime due si misura la differenza di potenziale $V_t$.
+\item Il ramo Woofer in cui sono collegati in serie una resistenza $R_6$ (12.030 $\pm$ 0.015$\Omega$), un induttore L (10.17 $\pm$ 0.1 H) e altre due resistenze $R_3$ (15.305 $\pm$ 0.017$\Omega$) e $R_1$ (330.45 $\pm$ 0.25 $\Omega$). Ai capi di $R_3$ ed $R_1$ viene misurata la differenza di potenziale $V_s$.
+\end{itemize}
+La scelta delle componenti del circuito è mirata a eguagliare i valori resistivi dei due rami, tenendo conto anche della resistenza interna dell'induttanza H ($37.750 \pm 0.027$ $\Omega$).
+Inoltre le componenti del circuito soddisfano la relazione:
+$$L = R^2 C $$
+che ci garantisce, come dimostrato in appendice, il massimo trasferimento di potenza tra il generatore e i rami del circuito, per qualsiasi frequenza.I valori riportati delle resistenze R, dell'induttanza L e della capacità C sono stati acquisiti mediante il Multimetro Digitale, eccetto per la resistenza interna  del generatore($R_i$) fornita dal costruttore.Per prima cosa è stata fatta un'analisi qualitativa del comportamento del circuito acquisendo simultaneamente i valori delle tensioni in entrata ($V_i$)e ai capi delle resistenze $R_L$ e $R_C$, a tre frequenze di generazione diverse.  %specifica cos'è RL e RC... fai vedere che è la somma di due in serie%
+In particolare sono state generate frequenze che fossero in grado di mettere in evidenza il corretto funzionamento del filtro.
+
+Successivamente 
+
+
+
+
+
+Quest'ultima, in particolare, è stata fatta variare mediante uno Sweap del Function Generator di Elvis dapprima in un intervallo compreso fra ...Hz e ...Hz con incrementi di ....s, e in sefuito in un intervallo più limitato fra ...Hz e ...Hz con incrementi di ...s. 
+Ora motivare la scelta del range, descrivere velocemente il procedimento 
+
+
+
+
+
+\section{Risultati}
+Riportiamo ora i principali risultati dell'esperimento. In Figura 2 sono raccolti i dati relativi all'esame qualitativo del filtro esposto a tre diverse frequenze di generazione.
+Come previsto, l'analisi ha mostrato che a basse frequenze (Grafico 3a), il ramo induttivo assorbe la maggior parte della potenza erogata, limitando l'ampiezza del ramo Twitter. Al contrario, quando la frequenza supera nettamente quella del punto di crossover, il ramo capacitivo mostra un'ampiezza maggiore.
+Si può notare fin da subito che lo smorzamento delle ampiezze sul ramo Twitter
+
+
+
+
+%OCCHIO E' SBAGLIATA LA LEGENDA!!!!
+\begin{figure}
+
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=0.9\linewidth, height=6cm]{Prel300.pdf} 
+\caption{}
+\label{fig:subim1}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=0.9\linewidth, height=6cm]{Prel15.pdf}
+\caption{}
+\label{fig:subim2}
+\end{subfigure}
+
+\begin{subfigure}{\textwidth}
+\includegraphics[width=0.5\textwidth, center]{Prel61.pdf}
+\caption{}
+\label{fig:subim3}
+\end{subfigure}
+
+
+
+\caption{Comportamento del filtro Crossover sottoposto a diverse frequenze sinusoidali in ingresso. Il grafico (a) riporta i dati relativi ad una frequenza di generazione di 330Hz, il grafico (b) riporta i dati relativi ad una frequenza di generazione di 15KHz ed infine il grafico (c) riporta i dati relativi ad una frequenza di generazione di 6.1Hz, }
+\label{fig:image2}
+
+
+\end{figure}
+
+
+
+\end{document}
