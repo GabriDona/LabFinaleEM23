@@ -1,0 +1,291 @@
+#include <iostream>
+#include "TRandom.h"
+#include "TMath.h"
+#include "TH1F.h"
+#include "TH3F.h"
+#include <cmath>
+
+// Utilizzare al CANALE 1 il GENERATORE, al CANALE 2 il TWEETER e al CANALE 3 il WOOFER
+// QUELLE COMMENTATE SONO LE FORMULE E I DATI NOSTRI, CONTROLLARE LA RESISTENZA DI L
+// Inserire come V sempre quello immesso
+
+void voltTime()
+{                                                            // Amplitude (v) - Time (s)
+    TGraph *freqGen1 = new TGraph("freqGen.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo generata
+    TGraph *freqTwi1 = new TGraph("freqTwi.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo twiter
+    TGraph *freqSub1 = new TGraph("freqSub.txt", "%lg %lg"); // Dati relativi alla ampiezza - tempo woofer
+
+    TCanvas *myCanvas1 = new TCanvas("myCanvas1", "n1 Heartz Behavior"); // sovrapponi 3 grafici
+    freqGen1->SetTitle("n1 Heartz Behavior; Time(s); Amplitude(V)");
+    freqGen1->SetLineColor(40);
+    freqGen1->SetLineWidth(3);
+    freqGen1->Draw();
+
+    freqTwi1->SetLineColor(46);
+    freqTwi1->SetLineWidth(3);
+    freqTwi1->Draw("CP");
+    freqSub1->SetLineColor(38);
+    freqSub1->SetLineWidth(3);
+    freqSub1->Draw("CP");
+}
+
+void freqVolt()
+{
+    TGraphErrors *freqvolt = new TGraphErrors("freqvolt.txt", "%lg %lg");
+    TGraphErrors *freqvoltTwi = new TGraphErrors("freqvoltTwi.txt", "%lg %lg");
+    TGraphErrors *freqvoltSub = new TGraphErrors("freqvoltSub.txt", "%lg %lg");
+
+    for (int i = 1; i < 432; ++i)
+    {
+        freqvolt->SetPointError(i, 0.186, 0.023);
+    }
+
+    for (int i = 1; i < 438; ++i)
+    {
+        freqvoltTwi->SetPointError(i, 0.186, 0.023);
+    }
+
+    for (int i = 1; i < 444; ++i)
+    {
+        freqvoltSub->SetPointError(i, 0.186, 0.023);
+    }
+
+    TF1 *f1 = new TF1("f1", "2.5*TMath::Sqrt((2.313E10 * TMath::Power((2*TMath::Pi()* x *[1] - 1/(2*TMath::Pi()*x*[0])),2) + 2.313E10 * TMath::Power((1+[1]/[0]),2))/ (2.9E10 * TMath::Power((2 * TMath::Pi() * x *[1] - 1 / (2 * TMath::Pi() * x *[0])), 2) + 2.313E10 * TMath::Power((1.26 + [1] / [0]), 2))) ", 500, 14000);
+    TF1 *f2 = new TF1("f2", "2.19*0.8799/TMath::Sqrt(1+1/TMath::Power((2*TMath::Pi()*x*[0]),2))", 500, 14000);
+    TF1 *f3 = new TF1("f3", "2.19*0.874/TMath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*[0]),2))", 500, 14000);
+
+    TF1 *fatt1 = new TF1("fatt1", "2.19", 1000, 14000);
+    TF1 *fatt2 = new TF1("fatt2", "2.19*0.8799/TMath::Sqrt(1+1/TMath::Power((2*TMath::Pi()*x*0.00002601),2))", 1000, 14000);
+    TF1 *fatt3 = new TF1("fatt3", "2.19*0.874/TMath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*0.00002579),2))", 1000, 14000);
+
+    fatt1->SetLineColor(kGreen + 3); // I colori poi li mettiamo a posto
+    fatt2->SetLineColor(kOrange);
+    fatt3->SetLineColor(kCyan);
+
+    fatt1->SetLineWidth(5);
+    fatt2->SetLineWidth(5);
+    fatt3->SetLineWidth(5);
+
+    freqvolt->SetLineColor(kSpring - 4);
+    freqvoltTwi->SetLineColor(kPink - 4);
+    freqvoltSub->SetLineColor(kAzure + 6);
+
+    f1->SetLineColor(kGreen + 2);
+    f2->SetLineColor(kRed + 2);
+    f3->SetLineColor(kBlue + 2);
+
+    f1->SetParameter(0, 2.601E-5);
+    f1->SetParError(0, 2.78E-7);
+    f1->SetParameter(1, 2.579E-5);
+    f1->SetParError(1, 2.58E-7);
+
+    f2->SetParameter(0, 2.601E-5);
+    f2->SetParError(0, 2.78E-7);
+    f3->SetParameter(0, 2.579E-5);
+    f3->SetParError(0, 2.58E-7);
+
+    freqvolt->Fit(f1, "N");
+    freqvoltTwi->Fit(f2, "N");
+    freqvoltSub->Fit(f3, "N");
+
+    TCanvas *myCanvas = new TCanvas("Frequenza Ampiezza 1 spe");
+
+    freqvolt->SetMinimum(0);
+    freqvolt->SetMaximum(2.5);
+    freqvolt->GetXaxis()->SetLimits(0, 14000);
+    freqvolt->SetTitle("Grafico sperimentale frequenza-ampiezza");
+    freqvolt->GetXaxis()->SetTitle("Frequenza (Hz)");
+    freqvolt->GetYaxis()->SetTitle("Ampiezza (V)");
+
+    f1->SetLineWidth(3);
+    f2->SetLineWidth(3);
+    f3->SetLineWidth(3);
+
+    freqvolt->Draw("APE");
+    freqvoltTwi->Draw("SAME");
+    freqvoltSub->Draw("SAME");
+
+    f1->Draw("SAME");
+    f2->Draw("SAME");
+    f3->Draw("SAME");
+
+    TLegend *legend = new TLegend(0.6, 0.3, 0.9, 0.1);
+    legend->AddEntry(f1, "Fit dati Generatore", "l");
+    legend->AddEntry(f2, "Fit dati Tweeter", "l");
+    legend->AddEntry(f3, "Fit dati Woofer", "l");
+    legend->Draw();
+
+    TCanvas *myCanvas2 = new TCanvas("Frequenza Ampiezza 1 att");
+
+    fatt1->SetMinimum(0);
+    fatt1->SetMaximum(2.5);
+    fatt1->SetTitle("Grafico analitico frequenza-ampiezza");
+    fatt1->GetXaxis()->SetTitle("Frequenza (Hz)");
+    fatt1->GetYaxis()->SetTitle("Ampiezza (V)");
+
+    fatt1->Draw();
+    fatt2->Draw("SAME");
+    fatt3->Draw("SAME");
+
+    f1->Draw("SAME");
+    f2->Draw("SAME");
+    f3->Draw("SAME");
+
+    TLegend *legend1 = new TLegend(0.6, 0.3, 0.9, 0.1);
+    legend1->AddEntry(fatt1, "Funzione attesa Generatore", "l");
+    legend1->AddEntry(fatt2, "Funzione attesa Tweeter", "l");
+    legend1->AddEntry(fatt3, "Funzaione attesa Woofer", "l");
+    legend1->AddEntry(f1, "Fit dati Generatore", "l");
+    legend1->AddEntry(f2, "Fit dati Tweeter", "l");
+    legend1->AddEntry(f3, "Fit dati Woofer", "l");
+    legend1->Draw();
+
+    double f = 1 / (2 * TMath::Pi() * TMath::Sqrt(f2->GetParameter(0) * f3->GetParameter(0)));
+    double g = TMath::Sqrt(TMath::Power((f2->GetParError(0) / f2->GetParameter(0)), 2) + TMath::Power((f3->GetParError(0) / f3->GetParameter(0)), 2)) * f;
+    std::cout << '\n'
+              << "La frequenza di crossover é " << f << " ± " << g << "Hz" << '\n';
+    std::cout << "Tc = " << f2->GetParameter(0) << " ± " << f2->GetParError(0) << '\n';
+    std::cout << "Tl = " << f3->GetParameter(0) << " ± " << f3->GetParError(0) << '\n';
+    std::cout << "V = " << f1->GetParameter(0) << " ± " << f1->GetParError(0) << '\n';
+
+    TF1 *fs1 = new TF1("fs1", "f2-f3", 1000, 9000);
+    Double_t a = f2->GetParameter(0);
+    Double_t b = f3->GetParameter(0);
+    fs1->SetParameter(0, a);
+    fs1->SetParameter(1, b);
+
+    TF1 *fs2 = new TF1("fs1", "fatt2-fatt3", 1000, 9000);
+
+    std::cout << "La frequenza di crossover é " << fs1->GetX(0, 6000, 7000) << "Hz" << '\n';
+    std::cout << "La frequenza di crossover attesa é " << fs2->GetX(0, 6000, 7000) << "Hz" << '\n'
+              << '\n';
+
+    std::cout << "Chi quadro ridotto 1 è " << f1->GetChisquare() / f1->GetNDF() << '\n';
+    std::cout << "Chi quadro ridotto 2 è " << f2->GetChisquare() / f2->GetNDF() << '\n';
+    std::cout << "Chi quadro ridotto 3 è " << f3->GetChisquare() / f3->GetNDF() << '\n';
+}
+
+void freqVolt2()
+{
+    TGraphErrors *freqvolt = new TGraphErrors("freqvolt2.txt", "%lg %lg");
+    TGraphErrors *freqvoltTwi = new TGraphErrors("freqvoltTwi2.txt", "%lg %lg");
+    TGraphErrors *freqvoltSub = new TGraphErrors("freqvoltSub2.txt", "%lg %lg");
+
+    for (int i = 1; i < 231; ++i)
+    {
+        freqvolt->SetPointError(i, 0, 0.023);
+    }
+
+    for (int i = 1; i < 252; ++i)
+    {
+        freqvoltTwi->SetPointError(i, 0, 0.023);
+    }
+
+    for (int i = 1; i < 248; ++i)
+    {
+        freqvoltSub->SetPointError(i, 0, 0.023);
+    }
+
+    TF1 *f2 = new TF1("f2", "2.19*0.8799/TMath::Sqrt(1+1/TMath::Power((2*TMath::Pi()*x*[0]),2))", 5000, 7000);
+    TF1 *f3 = new TF1("f3", "2.19*0.874/TMath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*[0]),2))", 5000, 7000);
+
+    TF1 *fatt2 = new TF1("fatt2", "2.19*0.8799/TMath::Sqrt(1+1/TMath::Power((2*TMath::Pi()*x*0.00002601),2))", 5000, 7000);
+    TF1 *fatt3 = new TF1("fatt3", "2.19*0.874/TMath::Sqrt(1+TMath::Power((2*TMath::Pi()*x*0.00002579),2))", 5000, 7000);
+
+    fatt2->SetLineColor(kOrange);
+    fatt3->SetLineColor(kCyan);
+    fatt2->SetLineWidth(3);
+    fatt3->SetLineWidth(3);
+
+    freqvoltTwi->SetLineColor(kPink - 4);
+    freqvoltSub->SetLineColor(kAzure + 6);
+
+    f2->SetLineColor(kRed + 2);
+    f3->SetLineColor(kBlue + 2);
+    f2->SetLineWidth(3);
+    f3->SetLineWidth(3);
+
+    f2->SetParameter(0, 2.601E-5);
+    f2->SetParError(0, 2.78E-7);
+    f3->SetParameter(0, 2.579E-5);
+    f3->SetParError(0, 2.58E-7);
+
+    freqvoltTwi->Fit(f2, "N");
+    freqvoltSub->Fit(f3, "N");
+
+    TCanvas *myCanvas = new TCanvas("Frequenza Amzpiezza 1 spe");
+
+    freqvoltTwi->SetMinimum(1.1);
+    freqvoltTwi->SetMaximum(1.6);
+    freqvoltTwi->GetXaxis()->SetLimits(5000, 7000);
+    freqvoltTwi->SetTitle("Grafico sperimentale frequenza-ampiezza range ridotto");
+    freqvoltTwi->GetXaxis()->SetTitle("Frequenza (Hz)");
+    freqvoltTwi->GetYaxis()->SetTitle("Ampiezza (V)");
+
+    freqvoltTwi->Draw("APE");
+    freqvoltSub->Draw("SAME");
+
+    f2->Draw("SAME");
+    f3->Draw("SAME");
+
+    TLegend *legend = new TLegend(0.6, 0.2, 0.9, 0.1);
+    legend->AddEntry(f2, "Fit dati Tweeter", "l");
+    legend->AddEntry(f3, "Fit dati Woofer", "l");
+    legend->Draw();
+
+    TCanvas *myCanvas2 = new TCanvas("Frequenza Amzpiezza 1 att");
+
+    TGraphErrors *gr = new TGraphErrors("gra");
+    TGraphErrors *gra = new TGraphErrors("gra");
+
+    gr->SetLineWidth(2);
+    gra->SetLineWidth(2);
+
+    gr->AddPoint(6213, 1.356);
+    gra->AddPoint(6103, 1.361);
+    gr->SetPointError(0, 27, 0);
+    gra->SetPointError(0, 86, 0);
+
+    fatt2->SetMinimum(1.1);
+    fatt2->SetMaximum(1.6);
+    fatt2->SetTitle("Grafico analitico frequenza-ampiezza range ridotto");
+    fatt2->GetXaxis()->SetTitle("Frequenza (Hz)");
+    fatt2->GetYaxis()->SetTitle("Ampiezza (V)");
+
+    fatt2->Draw();
+    fatt3->Draw("SAME");
+
+    f2->Draw("SAME");
+    f3->Draw("SAME");
+    gr->Draw("SAME");
+    gra->Draw("SAME");
+
+    TLegend *legend1 = new TLegend(0.6, 0.3, 0.9, 0.1);
+    legend1->AddEntry(fatt2, "Funzione attesa Tweeter", "l");
+    legend1->AddEntry(fatt3, "Funzione attesa Woofer", "l");
+    legend1->AddEntry(f2, "Fit dati Tweeter", "l");
+    legend1->AddEntry(f3, "Fit dati Woofer", "l");
+    legend1->Draw();
+
+    double f = 1 / (2 * TMath::Pi() * TMath::Sqrt(f2->GetParameter(0) * f3->GetParameter(0)));
+    double g = TMath::Sqrt(TMath::Power((f2->GetParError(0) / f2->GetParameter(0)), 2) + TMath::Power((f3->GetParError(0) / f3->GetParameter(0)), 2)) * f;
+    std::cout << '\n'
+              << "La frequenza di crossover é " << f << " ± " << g << "Hz" << '\n';
+
+    TF1 *fs1 = new TF1("fs1", "f2-f3", 5000, 7000);
+    Double_t a = f2->GetParameter(0);
+    Double_t b = f3->GetParameter(0);
+    fs1->SetParameter(0, a);
+    fs1->SetParameter(1, b);
+
+    TF1 *fs2 = new TF1("fs1", "fatt2-fatt3", 5000, 7000);
+
+    std::cout << "La frequenza di crossover é " << fs1->GetX(0, 6000, 7000) << "Hz" << '\n';
+    std::cout << "La frequenza di crossover attesa é " << fs2->GetX(0, 6000, 7000) << "Hz" << '\n'
+              << '\n';
+    std::cout << "Tc = " << f2->GetParameter(0) << " ± " << f2->GetParError(0) << '\n';
+    std::cout << "Tl = " << f3->GetParameter(0) << " ± " << f3->GetParError(0) << '\n';
+
+    std::cout << "Chi quadro ridotto 2 è " << f2->GetChisquare() / f2->GetNDF() << '\n';
+    std::cout << "Chi quadro ridotto 3 è " << f3->GetChisquare() / f3->GetNDF() << '\n';
+}
