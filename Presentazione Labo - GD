@@ -1,0 +1,407 @@
+\documentclass{beamer}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usepackage{pifont}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{graphicx}
+
+\usepackage{subcaption}
+
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{shapes, arrows}
+\tikzstyle{connector} = [draw, -latex']
+
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\usetheme{Boadilla}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[american]{circuitikz}
+\usepackage{wrapfig}
+
+\title[Circuito Crossover] %optional
+{Circuito Crossover}
+
+\subtitle{Laboratorio di Elettromagnetismo e Ottica}
+\author{Gabriele Donati}
+\institute[Unibo] % (optional)
+{
+
+Università di Bologna
+}
+
+\date[June 2023] % (optional)
+{Modulo 1}
+%first slide
+\logo{\includegraphics[height=1cm]{logo unibo.png}}
+\begin{document}
+
+\tikzstyle{terminator} = [rectangle, draw, text centered, rounded corners, minimum height=2em]
+
+\tikzstyle{process} = [rectangle, draw, text centered, minimum height=2em]
+
+\frame{\titlepage}
+
+\begin{frame}{Introduzione}
+
+\begin{tikzpicture}
+\node [terminator, fill=red!20] at (6,-4) (start) {\textbf{Circuito Crossover}};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (1,-2) {};
+
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (6,-2) {};
+
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (10,-1) {};
+
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (10,-3) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (3,-6) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (8,-6.5) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (7.85,-5.5) {};
+
+\end{tikzpicture}
+    
+\end{frame}
+\begin{frame}{Introduzione}
+
+\begin{tikzpicture}
+\node [terminator, fill=red!20] at (6,-4) (start) {\textbf{Circuito Crossover}};
+\node [process, fill=blue!20] at (1,-2) (data) {Circuito RLC};
+
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (6,-2) {};
+
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (10,-1) {};
+
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (10,-3) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (3,-6) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (8,-6.5) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (7.85,-5.5) {};
+\path[connector](start) -- (data);
+
+\end{tikzpicture}
+    
+\end{frame}
+
+
+\begin{frame}{Introduzione}
+
+\begin{tikzpicture}
+\node [terminator, fill=red!20] at (6,-4) (start) {\textbf{Circuito Crossover}};
+\node [process, fill=blue!20] at (1,-2) (data) {Circuito RLC};
+
+\node [process, fill=blue!20] at (6,-2) (doing) {Selettore di frequenze};
+
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (10,-1) {};
+
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (10,-3) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (3,-6) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (8,-6.5) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (7.85,-5.5) {};
+\path[connector](start) -- (data);
+\path[connector] (start) --(doing);
+
+\end{tikzpicture}
+    
+\end{frame}
+
+
+
+
+
+\begin{frame}{Introduzione}
+
+\begin{tikzpicture}
+\node [terminator, fill=red!20] at (6,-4) (start) {\textbf{Circuito Crossover}};
+\node [process, fill=blue!20] at (1,-2) (data) {Circuito RLC};
+
+\node [process, fill=blue!20] at (6,-2) (doing) {Selettore di frequenze};
+
+\node [process, fill=green!20] at (10,-1) (twitter) {$\Vec{Z_T} = R_T - j (\frac{1}{\Omega C})$};
+\node [process, fill=green!20] at (10,-3) (woofer) {$\Vec{Z_W}=R_W + j(\Omega L)$};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (3,-6) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (8,-6.5) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (7.85,-5.5) {};
+\path[connector](start) -- (data);
+\path[connector] (start) --(doing);
+\path[connector](doing) -- (twitter);
+\path[connector] (doing) --(woofer);
+
+\end{tikzpicture}
+    
+\end{frame}
+
+
+
+
+\begin{frame}{Introduzione}
+
+\begin{tikzpicture}
+\node [terminator, fill=red!20] at (6,-4) (start) {\textbf{Circuito Crossover}};
+\node [process, fill=blue!20] at (1,-2) (data) {Circuito RLC};
+
+\node [process, fill=blue!20] at (6,-2) (doing) {Selettore di frequenze};
+
+\node [process, fill=green!20] at (10,-1) (twitter) {$\Vec{Z_T} = R_T - j (\frac{1}{\Omega C})$};
+\node [process, fill=green!20] at (10,-3) (woofer) {$\Vec{Z_W}=R_W + j(\Omega L)$};
+\node [process, fill=blue!20] at (3,-6) (freq) {Frequenza di Crossover};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (8,-6.5) {};
+\node[draw=white,
+        minimum width=2.4cm,
+        minimum height=0.8cm] at (7.85,-5.5) {};
+\path[connector](start) -- (data);
+\path[connector] (start) --(doing);
+\path[connector](doing) -- (twitter);
+\path[connector] (doing) --(woofer);
+\path[connector] (start) --(freq);
+
+
+\end{tikzpicture}
+    
+\end{frame}
+
+
+
+
+
+
+
+
+\begin{frame}{Introduzione}
+
+\begin{tikzpicture}
+\node [terminator, fill=red!20] at (6,-4) (start) {\textbf{Circuito Crossover}};
+\node [process, fill=blue!20] at (1,-2) (data) {Circuito RLC};
+\node [process, fill=blue!20] at (6,-2) (doing) {Selettore di frequenze};
+\node [process, fill=green!20] at (10,-1) (twitter) {$\Vec{Z_T} = R_T - j (\frac{1}{\Omega C})$};
+\node [process, fill=green!20] at (10,-3) (woofer) {$\Vec{Z_W}=R_W + j(\Omega L)$};
+\node [process, fill=blue!20] at (3,-6) (freq) {Frequenza di Crossover};
+\node [process, fill=yellow!20] at (8,-6.5) (met1) {Metodo delle Ampiezze};
+\node [process, fill=yellow!20] at (7.55,-5.5) (met2) {Metodo delle Fasi};
+\path [connector] (start) -- (data);
+\path [connector] (start) -- (doing);
+\path[connector](freq) -- (met1);
+\path[connector](freq) -- (met2);
+\path [connector] (doing) -- (woofer);
+\path [connector] (doing) -- (twitter);
+\path[connector] (start) -- (freq);
+
+\end{tikzpicture}
+    
+\end{frame}
+
+
+\begin{frame}{Apparato Sperimentale}
+
+\begin{figure}
+    \centering
+       
+    \begin{circuitikz}[scale = 0.5, transform shape] 
+\draw
+
+(0,-1) -- (0,2) to[short, -o] (-2,2)
+(0,2) to[sV, l=$V_s$] 
+(0,5) to[R, l=$R_G$](0,6)
+(0,7) to[short,-o] (-2,7)
+(-2,7) to[open,v^=$V_G(t)$] (-2,2)
+(0,6) -- (0,9)
+(0,9) -- (8,9)
+(4,9) to[R, l=$R_5$] 
+(4,7) to[C, l=$C$] 
+(4,5) to [short,-o](3,5)
+(4,5) to[R, l=$R_3$] 
+(4,2) to[R, l=$R_1$] (4,0)
+(4,0) -- (4,-1)
+(4,0) to [short,-o](3,0)
+(3,5) to[open,v^=$V_T(t)$] (3,0)
+(8,9) --
+(8,9) to[R, l=$R_6$] 
+(8,7) to[cute inductor, l=$L$] 
+(8,5) to [short,-o](7,5)
+(8,5) to[R, l=$R_4$]
+(8,2) to[R, l=$R_2$]
+(8,0) to [short, -o](7,0)
+(7,5) to[open,v^=$V_W(t)$] (7,0)
+(8,0) -- (8,-1)
+(8,-1) -- (0,-1)
+;
+
+\end{circuitikz}
+
+    \label{fig:enter-label}
+\end{figure}
+  
+\begin{itemize}
+ \item<1-> Circuito realizzato sulla Breadboard NI ELVIS II
+ \item<2-> Ramo Twitter costituito da tre resistenze e un condensatore
+ \item<3-> Ramo Woofer costituito da tre resistenze e un induttore
+ \item<4-> Si è tenuto conto sia della resistenza interna del generatore, sia di quella dell'induttore
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Analisi qualitativa}
+   \begin{figure}
+       \centering
+       \includegraphics[scale = 0.5]{Prel300.pdf}
+       \label{fig:prel3}
+   \end{figure}
+
+\end{frame}
+\begin{frame}{Analisi qualitativa}
+   \begin{figure}
+       \centering
+       \includegraphics[scale = 0.5]{Prel15.pdf}
+       \label{fig:prel15}
+   \end{figure}
+
+\end{frame}
+\begin{frame}{Analisi qualitativa}
+   \begin{figure}
+       \centering
+       \includegraphics[scale = 0.5]{Prel61.pdf}
+       \label{fig:prel61}
+   \end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Metodo delle Ampiezze}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{Frequenza Ampiezza 1 spe.pdf}
+    \label{fig:1}
+\end{figure}
+\begin{itemize}
+ \item<1-> 500Hz - 14KHz
+ \item<2-> Si è considerata la resistenza interna del generatore, $V=V(\Omega)$
+ \item<3-> $\tau_C = (2.606 \pm 0.001)\cdot 10^{-5} $ s  e $\tau_L = (2.569 \pm 0.001)\cdot 10^{-5}  $ s
+  \item<4-> $\tilde{\chi}^2_C = 1.45$ e $\tilde{\chi}^2_L = 2.84$
+ \item<5-> $\nu_a = (6.15 \pm 0.15)$ kHz e $\nu_{a2} = (6.21 \pm 0.15) kHz$
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Metodo delle Ampiezze}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{Frequenza Amzpiezza 1 spe.pdf}
+    \label{fig:6}
+\end{figure}
+\begin{itemize}
+    \item<1 -> 5 KHz - 7 KHz
+    \item <2 -> $\tau_C = (2.585 \pm 0.003)\cdot 10^{-5}  $ s e $\tau_L = (2.570 \pm 0.005)\cdot 10^{-5}  $ s
+    \item <3 -> $\tilde{\chi}^2 << 1$
+    \item <4 -> $\nu_a = (6.174 \pm 0.018)$ kHz e $\nu_{a2} = (6.217 \pm 0.018) $ kHz
+\end{itemize}
+    
+\end{frame}
+
+
+\begin{frame}{Metodo delle Fasi}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{Frequenza Fase 1 att.pdf}
+    \label{fig:99}
+\end{figure}
+    
+\end{frame}
+
+\begin{frame}{Metodo delle Fasi}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{Frequenza Fase 1 err (2).pdf}
+    \label{fig:errsis}
+\end{figure}    
+
+\begin{itemize}
+    \item <1 -> Canale 0 = 0 °/Hz
+    \item <2 -> Canale 1 = 0.8 °/Hz
+    \item <3 -> Canale 2 = 1.6 °/Hz
+\end{itemize} 
+\end{frame}
+
+
+
+\begin{frame}{Metodo delle Fasi}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.45]{Frequenza Fase 1 att.pdf}
+    \label{fig:98}
+
+    \begin{itemize}
+    \item <1 -> $\tau_C = (2.49 \pm 0.03)\cdot10^{-5} $ s e $\tau_L = (2.57 \pm 0.03)\cdot10^{-5} $ s
+    \item <2 -> $\tilde{\chi}^2_G = 0.86$, $\tilde{\chi}^2_C = 1.64$ e $\tilde{\chi}^2_L = 0.71$
+    \item <3 -> $\nu_f = (6.29 \pm 0.17) $ kHz e $\nu_{f2} = (6.09 \pm 0.17) $ kHz
+\end{itemize} 
+\end{figure}
+    
+\end{frame}
+
+
+\begin{frame}{Errori Sperimentali}
+\begin{itemize}
+    \item <1 -> L'incertezza associata alle misure delle ampiezze corrisponde all’errore casuale sui canali di input ricavato dalle specifiche ELVIS (2mV)
+    \item <2 -> L'errore sulle misure di frequenza provengono dalle specifiche (0.186Hz)
+    \item <3 -> Per la fase si è considerata la distribuzione casuale dei punti
+a frequenza costante come una gaussiana e l’errore come tre volte la deviazione standard di quest’ultima (0.9°)
+\item[\ding{32}] <4 -> \begin{figure}
+    \centering
+    \includegraphics[scale = 0.3]{c1.pdf}
+    
+    \label{fig:c1}
+\end{figure}
+\end{itemize}    
+\end{frame}
+
+\begin{frame}{Conclusioni}
+
+    
+\end{frame}
+
+
+
+
+
+\end{document}
+
